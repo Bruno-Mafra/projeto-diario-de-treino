@@ -1,8 +1,27 @@
 import 'package:flutter/material.dart';
 import '/screens/login.dart';
 
-void main() {
-  runApp(const MyApp());
+//Required imports for firebase
+import 'package:firebase_core/firebase_core.dart';
+import 'firebase_options.dart';
+
+//Future<void> main() async {
+//  await Firebase.initializeApp(
+//      options: DefaultFirebaseOptions.currentPlatform,
+//  );
+//
+//  runApp(const MyApp());
+//}
+
+Future<void> main() async {
+  WidgetsFlutterBinding.ensureInitialized();
+  try {
+    await Firebase.initializeApp(
+      options: DefaultFirebaseOptions.currentPlatform,
+    );
+  } finally {
+    runApp(const MyApp());
+  }
 }
 
 class MyApp extends StatelessWidget {
