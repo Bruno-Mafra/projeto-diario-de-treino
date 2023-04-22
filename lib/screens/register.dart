@@ -67,17 +67,16 @@ class _RegisterScreenState extends State<RegisterScreen> {
       await interface.connect();
       bool usuarioExiste = await interface.checarUsuario(_emailController.text);
 
-      if(usuarioExiste){
+      if (usuarioExiste) {
         print("Usuario existe.");
         Fluttertoast.showToast(
-          msg: "O email inserido já está cadastrado.",
-          toastLength: Toast.LENGTH_SHORT,
-          gravity: ToastGravity.BOTTOM,
-          timeInSecForIosWeb: 1,
-          backgroundColor: Colors.redAccent[700],
-          textColor: Colors.white,
-          fontSize: 14.0
-        );
+            msg: "O email inserido já está cadastrado.",
+            toastLength: Toast.LENGTH_SHORT,
+            gravity: ToastGravity.BOTTOM,
+            timeInSecForIosWeb: 1,
+            backgroundColor: Colors.redAccent[700],
+            textColor: Colors.white,
+            fontSize: 14.0);
       } else {
         Map<String, dynamic> novoCadastro = {
           "email": _emailController.text,
@@ -94,13 +93,17 @@ class _RegisterScreenState extends State<RegisterScreen> {
             "peso": null,
             "cref professor": null
           };
-          await interface.inserirAluno(novoAluno);
+          await interface.inserirAluno(novoAluno).then((value) =>
+              Navigator.of(context, rootNavigator: true)
+                  .pushNamed('/student_home'));
         } else {
           Map<String, String> novoProfessor = {
             "cref": generateRandomString(16),
             "email": _emailController.text
           };
-          await interface.inserirProfessor(novoProfessor);
+          await interface.inserirProfessor(novoProfessor).then((value) =>
+              Navigator.of(context, rootNavigator: true)
+                  .pushNamed('/professor_home'));
         }
       }
     }
