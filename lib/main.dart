@@ -1,17 +1,11 @@
 import 'package:flutter/material.dart';
-import '/screens/login.dart';
+import 'screens/student_workouts.dart';
+import 'screens/register.dart';
+import 'screens/login.dart';
 
 //Required imports for firebase
 import 'package:firebase_core/firebase_core.dart';
 import 'firebase_options.dart';
-
-//Future<void> main() async {
-//  await Firebase.initializeApp(
-//      options: DefaultFirebaseOptions.currentPlatform,
-//  );
-//
-//  runApp(const MyApp());
-//}
 
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -36,7 +30,12 @@ class MyApp extends StatelessWidget {
         colorScheme: ColorScheme.fromSeed(seedColor: Colors.red),
         useMaterial3: true,
       ),
-      home: const LogginScreen(title: 'Diário de Treino'),
+      initialRoute: "/login",
+      routes: {
+        "/login": (context) => const LoginScreen(title: 'Diário de Treino',),
+        "/register": (context) => const RegisterScreen(),
+        "/student_home": (context) => const StudentWorkoutsScreen(),
+      },
     );
   }
 }

@@ -1,16 +1,15 @@
 import 'package:flutter/material.dart';
-import 'register.dart';
 
-class LogginScreen extends StatefulWidget {
-  const LogginScreen({super.key, required this.title});
+class LoginScreen extends StatefulWidget {
+  const LoginScreen({super.key, required this.title});
 
   final String title;
 
   @override
-  _LogginScreenState createState() => _LogginScreenState();
+  _LoginScreenState createState() => _LoginScreenState();
 }
 
-class _LogginScreenState extends State<LogginScreen> {
+class _LoginScreenState extends State<LoginScreen> {
   final _emailController = TextEditingController();
   final _passwordController = TextEditingController();
 
@@ -20,6 +19,7 @@ class _LogginScreenState extends State<LogginScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
+        automaticallyImplyLeading: false,
         backgroundColor: Colors.red,
         centerTitle: true,
         title: Text(widget.title),
@@ -83,6 +83,8 @@ class _LogginScreenState extends State<LogginScreen> {
               ),
               onPressed: () {
                 // verificar se o login esta correto no banco e ir para pagina inicial, se não, mostrar um toast de erro
+                Navigator.of(context, rootNavigator: true)
+                    .pushNamed('/student_home');
               },
               child: const Text(
                 'Entrar',
@@ -100,10 +102,8 @@ class _LogginScreenState extends State<LogginScreen> {
                 ),
                 GestureDetector(
                   onTap: () {
-                    Navigator.push(
-                      context,
-                      MaterialPageRoute(builder: (context) => const RegisterScreen()),
-                    );
+                    Navigator.of(context, rootNavigator: true)
+                        .pushNamed('/register');
                   },
                   child: const Text(
                     'Fazer cadastro',
