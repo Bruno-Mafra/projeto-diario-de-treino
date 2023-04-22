@@ -46,6 +46,10 @@ class Header extends StatelessWidget implements PreferredSizeWidget {
               icon: const Icon(Icons.settings, color: Colors.black),
               itemBuilder: (_) => [
                 PopupMenuItem(
+                  child: const Text('Perfil'),
+                  onTap: () {},
+                ),
+                PopupMenuItem(
                   child: const Text('Sair'),
                   onTap: () {
                     Navigator.push(
