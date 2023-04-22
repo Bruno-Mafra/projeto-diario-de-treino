@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:fluttertoast/fluttertoast.dart';
+import 'package:projeto_diario_de_treino/database/db_interface.dart';
 
 class LoginScreen extends StatefulWidget {
   const LoginScreen({super.key, required this.title});
@@ -14,6 +16,27 @@ class _LoginScreenState extends State<LoginScreen> {
   final _passwordController = TextEditingController();
 
   bool _obscurePassword = true;
+  void _validateLogin() async {
+    DbInterface interface = DbInterface();
+    await interface.connect();
+    interface.checarUsuario(_emailController.text, _passwordController.text).then(
+        (autenticado) {
+          if (autenticado) {
+            Navigator.of(context, rootNavigator: true)
+                .pushNamed('/student_home');
+          } else {
+            Fluttertoast.showToast(
+                msg: "Usuário ou senha inválidos.",
+                toastLength: Toast.LENGTH_SHORT,
+                gravity: ToastGravity.BOTTOM,
+                timeInSecForIosWeb: 1,
+                backgroundColor: Colors.redAccent[700],
+                textColor: Colors.white,
+                fontSize: 14.0);
+          }
+        }
+    );
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -81,11 +104,7 @@ class _LoginScreenState extends State<LoginScreen> {
                   },
                 ),
               ),
-              onPressed: () {
-                // verificar se o login esta correto no banco e ir para pagina inicial, se não, mostrar um toast de erro
-                Navigator.of(context, rootNavigator: true)
-                    .pushNamed('/student_home');
-              },
+              onPressed: _validateLogin,
               child: const Text(
                 'Entrar',
                 style: TextStyle(
