@@ -58,6 +58,8 @@ class _RegisterScreenState extends State<RegisterScreen> {
           backgroundColor: Colors.redAccent[700],
           textColor: Colors.white,
           fontSize: 14.0);
+    } else {
+      Navigator.of(context, rootNavigator: true).pushNamed('/student_workouts');
     }
   }
 
