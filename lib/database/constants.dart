@@ -1,6 +1,4 @@
 const MONGO_CONN_URL = "mongodb://user:password@3.144.44.244/project_db";
-const C_EXERCICIO = "Exercicio";
-const C_EXEC      = "Execução";
 const C_TREINO    = "Treino";
 const C_DISP_EXE  = "ExerciciosDisponiveis";
 

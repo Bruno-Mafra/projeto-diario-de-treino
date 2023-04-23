@@ -1,12 +1,16 @@
 import 'dart:ffi';
 import 'mongodb.dart';
 import 'sqldb.dart';
+import "package:projeto_diario_de_treino/entities/treino.dart";
+import "package:projeto_diario_de_treino/entities/exercicio.dart";
+import "package:mongo_dart/mongo_dart.dart";
 
 class DbInterface {
   connect() async {
     await MongoDatabase.connect();
     await SQLDatabase.connect();
   }
+
   Future<void> inserirCadastro(Map<String, dynamic> novoCadastro) async {
     await SQLDatabase.db.query('''
     INSERT INTO dadoscadastrais (email, nome, senha, tipo_usuario) 
@@ -48,7 +52,29 @@ class DbInterface {
 
   Future<void> recuperarInfoProfessor(String email) async {}
 
-  Future<void> buscarTreinos() async {}
+  Future<String> salvarTreino(int idAluno, Treino treino) async {
+    if (treino.id != null) {
+      // modifica treino
+      return " ";
+    } else {
+      try {
+        treino.id = ObjectId();
+        Map<String, dynamic> treinoJson = treino.toJson();
+        treinoJson['idAluno'] = idAluno;
+        var result = await MongoDatabase.collecTreinos.insertOne(treinoJson);
+        if (result.isSucess){
+          return "Data Inserted. Id: ${treino.id}";
+        } else {
+          return "Error";
+        }
+      } catch(e) {
+        print(e.toString());
+        return e.toString();
+      }
+    }
+  }
+
+  Future<void> buscarTreinos(int idAluno) async {}
 
   Future<void> buscarExercicios() async {}
 
