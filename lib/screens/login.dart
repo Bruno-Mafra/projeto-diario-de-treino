@@ -23,7 +23,7 @@ class _LoginScreenState extends State<LoginScreen> {
         (autenticado) {
           if (autenticado) {
             Navigator.of(context, rootNavigator: true)
-                .pushNamed('/student_home');
+                .pushNamed('/students_wokout');
           } else {
             Fluttertoast.showToast(
                 msg: "Usuário ou senha inválidos.",
