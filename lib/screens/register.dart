@@ -43,27 +43,6 @@ class _RegisterScreenState extends State<RegisterScreen> {
     });
   }
 
-  Future<String> _cadastrar() async {
-    if (_isAlunoSelected) {
-      Aluno novoAluno = Aluno(
-        email: _emailController.text,
-        nome: _nameController.text,
-        senha: _passwordController.text,
-      );
-      String resultado = await novoAluno.cadastrar();
-      return resultado;
-    } else {
-      Professor novoProfessor = Professor(
-          email: _emailController.text,
-          nome: _nameController.text,
-          senha: _passwordController.text,
-          cref: generateRandomString(16)
-      );
-      String resultado = await novoProfessor.cadastrar();
-      return resultado;
-    }
-  }
-
   void _handleFormSubmit() async {
     String toastMessage = '';
 
@@ -89,93 +68,58 @@ class _RegisterScreenState extends State<RegisterScreen> {
           textColor: Colors.white,
           fontSize: 14.0);
     } else {
-<<<<<<< HEAD
-      String resultado = await _cadastrar();
-      if (resultado == "email_cadastrado") {
-          print("Usuario existe.");
-          Fluttertoast.showToast(
-            msg: "O email inserido já está cadastrado.",
-            toastLength: Toast.LENGTH_SHORT,
-            gravity: ToastGravity.BOTTOM,
-            timeInSecForIosWeb: 1,
-            backgroundColor: Colors.redAccent[700],
-            textColor: Colors.white,
-            fontSize: 14.0
-          );
-      } else if (resultado == "sucesso") {
-        print("Cadastro Realizado.");
-        Fluttertoast.showToast(
-            msg: "Cadastro realizado com sucesso.",
-            toastLength: Toast.LENGTH_SHORT,
-            gravity: ToastGravity.BOTTOM,
-            timeInSecForIosWeb: 1,
-            backgroundColor: Colors.redAccent[700],
-            textColor: Colors.white,
-            fontSize: 14.0
-        );
-      } else {
-        print("Erro ao cadastrar.");
-        Fluttertoast.showToast(
-            msg: "Erro, contacte o suporte.",
-            toastLength: Toast.LENGTH_SHORT,
-            gravity: ToastGravity.BOTTOM,
-            timeInSecForIosWeb: 1,
-            backgroundColor: Colors.redAccent[700],
-            textColor: Colors.white,
-            fontSize: 14.0
-        );
-=======
       setState(() {
         _isLoading = true;
       });
 
       try {
-        DbInterface interface = DbInterface();
-        await interface.connect();
-        bool usuarioExiste =
-            await interface.checarUsuario(_emailController.text);
-
-        if (usuarioExiste) {
-          print("Usuario existe.");
-          Fluttertoast.showToast(
-              msg: "O email inserido já está cadastrado.",
-              toastLength: Toast.LENGTH_SHORT,
-              gravity: ToastGravity.BOTTOM,
-              timeInSecForIosWeb: 1,
-              backgroundColor: Colors.redAccent[700],
-              textColor: Colors.white,
-              fontSize: 14.0);
-
-          setState(() {
-            _isLoading = false;
-          });
+        if (_isAlunoSelected) {
+          Aluno novoAluno = Aluno(
+            email: _emailController.text,
+            nome: _nameController.text,
+            senha: _passwordController.text,
+          );
+          String resultado = await novoAluno.cadastrar();
+          if (resultado == "sucesso") {
+            Navigator.of(context, rootNavigator: true)
+                .pushNamed('/student_home');
+          } else if (resultado == "email_cadastrado") {
+            print("Usuario existe.");
+            Fluttertoast.showToast(
+                msg: "O email inserido já está cadastrado.",
+                toastLength: Toast.LENGTH_SHORT,
+                gravity: ToastGravity.BOTTOM,
+                timeInSecForIosWeb: 1,
+                backgroundColor: Colors.redAccent[700],
+                textColor: Colors.white,
+                fontSize: 14.0);
+            setState(() {
+              _isLoading = false;
+            });
+          }
         } else {
-          Map<String, dynamic> novoCadastro = {
-            "email": _emailController.text,
-            "nome": _nameController.text,
-            "senha": _passwordController.text,
-            "tipo_usuario": _isAlunoSelected ? 0 : 1
-          };
-          await interface.inserirCadastro(novoCadastro);
-          if (_isAlunoSelected) {
-            Map<String, dynamic> novoAluno = {
-              "email": _emailController.text,
-              "altura": null,
-              "imc": null,
-              "peso": null,
-              "cref professor": null
-            };
-            await interface.inserirAluno(novoAluno).then((value) =>
-                Navigator.of(context, rootNavigator: true)
-                    .pushNamed('/student_home'));
-          } else {
-            Map<String, String> novoProfessor = {
-              "cref": generateRandomString(16),
-              "email": _emailController.text
-            };
-            await interface.inserirProfessor(novoProfessor).then((value) =>
-                Navigator.of(context, rootNavigator: true)
-                    .pushNamed('/professor_home'));
+          Professor novoProfessor = Professor(
+              email: _emailController.text,
+              nome: _nameController.text,
+              senha: _passwordController.text,
+              cref: generateRandomString(16));
+          String resultado = await novoProfessor.cadastrar();
+          if (resultado == "sucesso") {
+            Navigator.of(context, rootNavigator: true)
+                .pushNamed('/professor_home');
+          } else if (resultado == "email_cadastrado") {
+            print("Usuario existe.");
+            Fluttertoast.showToast(
+                msg: "O email inserido já está cadastrado.",
+                toastLength: Toast.LENGTH_SHORT,
+                gravity: ToastGravity.BOTTOM,
+                timeInSecForIosWeb: 1,
+                backgroundColor: Colors.redAccent[700],
+                textColor: Colors.white,
+                fontSize: 14.0);
+            setState(() {
+              _isLoading = false;
+            });
           }
         }
       } catch (error) {
@@ -183,7 +127,6 @@ class _RegisterScreenState extends State<RegisterScreen> {
           _isLoading = false;
         });
       }
->>>>>>> e18ac498edadde9d2f42641d198a7a2087a5f8a0
     }
   }
 
