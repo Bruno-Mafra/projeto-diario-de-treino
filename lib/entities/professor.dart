@@ -18,6 +18,13 @@ class Professor extends Usuario {
   void acessarDadosAluno(String nomeAluno) {}
   void listarAlunos() {}
 
+  factory Professor.fromJson(Map<String, dynamic> dbInfo) => Professor(
+      email: dbInfo['email'],
+      nome: dbInfo['nome'],
+      senha: "",
+      cref: dbInfo['cref']
+  );
+
   Map<String, String> toJson() => {
     "cref": cref,
     "email": email

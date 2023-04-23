@@ -35,9 +35,10 @@ class Treino {
   factory Treino.fromJson(Map<String, dynamic> json) => Treino(
         id: json["_id"],
         nome: json["nome"],
-        listaExercicios: json["listaExercicios"].map(
+        listaExercicios: json["listaExercicios"].map<Exercicio>(
           (x) => Exercicio(
             nome: x["nome"],
+            quantidadeRepeticoes: x["quantidadeRepeticoes"],
             quantidadeSeries: x["quantidadeSeries"],
             tecnicaAvancada: x["tecnicaAvancada"],
           ),
@@ -51,6 +52,7 @@ class Treino {
         "nome": nome,
         "listaExercicios": listaExercicios.map((Exercicio x) => {
               "nome": x.nome,
+              "quantidadeRepeticoes": x.quantidadeRepeticoes,
               "quantidadeSeries": x.quantidadeSeries,
               "tecnicaAvancada": x.tecnicaAvancada,
             }).toList(),

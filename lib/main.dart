@@ -10,7 +10,26 @@ import 'screens/login.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'firebase_options.dart';
 
+import "package:projeto_diario_de_treino/database/db_interface.dart";
+import 'package:projeto_diario_de_treino/entities/aluno.dart';
+import "package:projeto_diario_de_treino/entities/professor.dart";
+
 Future<void> main() async {
+  DbInterface interface = DbInterface();
+  await interface.connect();
+
+  Professor novoProfessor = await interface.recuperarInfoProfessor("professor_a@gmail.com");
+  print("FUNCIONOU 1!");
+  print(novoProfessor.nome);
+  print(novoProfessor.alunosVinculados);
+  print(novoProfessor.alunosVinculados[0].nome);
+  
+  Aluno novoAluno = await interface.recuperarInfoAluno("whatever@gmail.com");
+  print("FUNCIONOU 2!");
+  print(novoAluno.nome);
+  print(novoAluno.listaTreinos.toString());
+  print(novoAluno.listaTreinos[0].nome);
+
   WidgetsFlutterBinding.ensureInitialized();
   try {
     await Firebase.initializeApp(

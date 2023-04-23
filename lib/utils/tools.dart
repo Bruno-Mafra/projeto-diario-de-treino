@@ -1,5 +1,5 @@
 import 'dart:math';
-
+import "package:projeto_diario_de_treino/entities/exercicio.dart";
 import 'package:fluttertoast/fluttertoast.dart';
 
 String generateRandomString(int len) {

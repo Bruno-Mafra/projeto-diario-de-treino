@@ -16,9 +16,12 @@ class Usuario {
     DbInterface interface = DbInterface();
     await interface.connect();
 
-    bool usuarioExiste = await interface.checarUsuario(email);
-
-    return usuarioExiste;
+    int usuarioExiste = await interface.checarUsuario(email);
+    if (usuarioExiste != -1) {
+      return true;
+    } else {
+      return false;
+    }
   }
 
   Future<String> cadastrar() async {

@@ -34,6 +34,16 @@ class Aluno extends Usuario {
     "cref_professor": crefProfesor,
   };
 
+  factory Aluno.fromJson(Map<String, dynamic> dbInfo) => Aluno(
+    email: dbInfo['email'],
+    nome: dbInfo['nome'],
+    senha: "",
+    altura: dbInfo['altura'],
+    imc: dbInfo['imc'],
+    peso: dbInfo['peso'],
+    crefProfesor: dbInfo['crefProfessor']
+  );
+
   @override
   Future<String> cadastrar() async {
     String resultado = await super.cadastrar();
