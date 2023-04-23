@@ -28,6 +28,15 @@ class _StudentWorkoutsScreenState extends State<StudentWorkoutsScreen> {
                 ),
               ),
             ),
+            const Padding(
+              padding: EdgeInsets.all(0.0),
+              child: Text(
+                'Selecione um treino para acompanhar ou agendar.',
+                style: TextStyle(
+                  fontSize: 14,
+                ),
+              ),
+            ),
             Padding(
               padding: const EdgeInsets.all(8.0),
               child: ClipRRect(
@@ -52,7 +61,18 @@ class _StudentWorkoutsScreenState extends State<StudentWorkoutsScreen> {
                           iconColor: Colors.black,
                           leading: const Icon(Icons.fitness_center_outlined),
                           backgroundColor: Colors.red[400],
-                          title: Text('Treino ${index + 1}'),
+                          title: Row(
+                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                            children: [
+                              Text('Treino ${index + 1}'),
+                              IconButton(
+                                onPressed: () {
+                                  // Levaria para as funcionalidades de calendário
+                                },
+                                icon: const Icon(Icons.calendar_today),
+                              ),
+                            ],
+                          ),
                           children: [
                             const Exercise(),
                             const Exercise(),
@@ -65,7 +85,10 @@ class _StudentWorkoutsScreenState extends State<StudentWorkoutsScreen> {
                                 padding: const EdgeInsets.symmetric(
                                     vertical: 10, horizontal: 70),
                                 child: ElevatedButton(
-                                  onPressed: () {},
+                                  onPressed: () {
+                                    Navigator.of(context, rootNavigator: true)
+                                        .pushNamed('/edit_workout');
+                                  },
                                   style: ElevatedButton.styleFrom(
                                     backgroundColor: Colors.red,
                                   ),
@@ -94,7 +117,10 @@ class _StudentWorkoutsScreenState extends State<StudentWorkoutsScreen> {
                 padding:
                     const EdgeInsets.symmetric(vertical: 10, horizontal: 100),
                 child: ElevatedButton(
-                  onPressed: () {},
+                  onPressed: () {
+                    Navigator.of(context, rootNavigator: true)
+                        .pushNamed('/edit_workout');
+                  },
                   style: ElevatedButton.styleFrom(
                     backgroundColor: Colors.red,
                   ),
@@ -107,13 +133,16 @@ class _StudentWorkoutsScreenState extends State<StudentWorkoutsScreen> {
                 ),
               ),
             ),
-            const SizedBox(height: 40.0),
-            const Text(
-              'Algum texto pra colocar aqui depois: ',
-              style: TextStyle(
-                fontSize: 16,
-                fontWeight: FontWeight.bold,
-                color: Colors.black,
+            const SizedBox(height: 25.0),
+            const Padding(
+              padding: EdgeInsets.symmetric(vertical: 0, horizontal: 30),
+              child: Text(
+                'Quer melhorar seus treinos? Acompanhe seu progresso e faça ajustes para avançar a cada dia.',
+                textAlign: TextAlign.center,
+                style: TextStyle(
+                  fontSize: 14,
+                  color: Colors.black,
+                ),
               ),
             ),
             Container(

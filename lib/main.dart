@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'screens/edit_workout.dart';
 import 'screens/student_workouts.dart';
 import 'screens/professor_home.dart';
 import 'screens/search_student.dart';
@@ -39,6 +40,7 @@ class MyApp extends StatelessWidget {
         "/student_home": (context) => const StudentWorkoutsScreen(),
         "/professor_home": (context) => const ProfessorHomeScreen(),
         "/search_student": (context) => const SearchStudentScreen(),
+        "/edit_workout": (context) => const EditWorkoutScreen(),
       },
     );
   }
