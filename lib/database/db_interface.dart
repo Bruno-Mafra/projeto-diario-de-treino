@@ -109,7 +109,7 @@ class DbInterface {
     Map<String, dynamic> alunoInfo = {
       "id": resultsAluno[0][0],
       "email": resultsAluno[0][1],
-      "nome": resultsCadastro[0][0],
+      "nome": resultsCadastro[0][1],
       "altura": resultsAluno[0][2],
       "imc": resultsAluno[0][3],
       "peso": resultsAluno[0][4],
