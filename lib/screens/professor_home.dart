@@ -54,7 +54,10 @@ class _ProfessorHomeScreenState extends State<ProfessorHomeScreen> {
                     itemCount: 5,
                     itemBuilder: (context, index) {
                       return GestureDetector(
-                        onTap: () {},
+                        onTap: () {
+                          Navigator.of(context, rootNavigator: true)
+                              .pushNamed('/student_home');
+                        },
                         child: Container(
                           decoration: BoxDecoration(
                             color: index % 2 != 0
