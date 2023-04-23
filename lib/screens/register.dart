@@ -1,3 +1,4 @@
+// ignore_for_file: unused_import, library_private_types_in_public_api
 import 'dart:ffi';
 
 import 'package:flutter/material.dart';
@@ -21,6 +22,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
   final _passwordController = TextEditingController();
   final _passwordRepeatedController = TextEditingController();
 
+  bool _isLoading = false;
   bool _isAlunoSelected = true;
   bool _isProfessorSelected = false;
 
@@ -81,12 +83,13 @@ class _RegisterScreenState extends State<RegisterScreen> {
       Fluttertoast.showToast(
           msg: toastMessage,
           toastLength: Toast.LENGTH_SHORT,
-          gravity: ToastGravity.BOTTOM,
+          gravity: ToastGravity.CENTER,
           timeInSecForIosWeb: 1,
           backgroundColor: Colors.redAccent[700],
           textColor: Colors.white,
           fontSize: 14.0);
     } else {
+<<<<<<< HEAD
       String resultado = await _cadastrar();
       if (resultado == "email_cadastrado") {
           print("Usuario existe.");
@@ -121,6 +124,66 @@ class _RegisterScreenState extends State<RegisterScreen> {
             textColor: Colors.white,
             fontSize: 14.0
         );
+=======
+      setState(() {
+        _isLoading = true;
+      });
+
+      try {
+        DbInterface interface = DbInterface();
+        await interface.connect();
+        bool usuarioExiste =
+            await interface.checarUsuario(_emailController.text);
+
+        if (usuarioExiste) {
+          print("Usuario existe.");
+          Fluttertoast.showToast(
+              msg: "O email inserido já está cadastrado.",
+              toastLength: Toast.LENGTH_SHORT,
+              gravity: ToastGravity.BOTTOM,
+              timeInSecForIosWeb: 1,
+              backgroundColor: Colors.redAccent[700],
+              textColor: Colors.white,
+              fontSize: 14.0);
+
+          setState(() {
+            _isLoading = false;
+          });
+        } else {
+          Map<String, dynamic> novoCadastro = {
+            "email": _emailController.text,
+            "nome": _nameController.text,
+            "senha": _passwordController.text,
+            "tipo_usuario": _isAlunoSelected ? 0 : 1
+          };
+          await interface.inserirCadastro(novoCadastro);
+          if (_isAlunoSelected) {
+            Map<String, dynamic> novoAluno = {
+              "email": _emailController.text,
+              "altura": null,
+              "imc": null,
+              "peso": null,
+              "cref professor": null
+            };
+            await interface.inserirAluno(novoAluno).then((value) =>
+                Navigator.of(context, rootNavigator: true)
+                    .pushNamed('/student_home'));
+          } else {
+            Map<String, String> novoProfessor = {
+              "cref": generateRandomString(16),
+              "email": _emailController.text
+            };
+            await interface.inserirProfessor(novoProfessor).then((value) =>
+                Navigator.of(context, rootNavigator: true)
+                    .pushNamed('/professor_home'));
+          }
+        }
+      } catch (error) {
+        setState(() {
+          _isLoading = false;
+        });
+      }
+>>>>>>> e18ac498edadde9d2f42641d198a7a2087a5f8a0
     }
   }
 
@@ -133,178 +196,185 @@ class _RegisterScreenState extends State<RegisterScreen> {
         title: const Text('Cadastro'),
       ),
       backgroundColor: Colors.white,
-      body: SingleChildScrollView(
-        child: Padding(
-          padding: const EdgeInsets.all(16.0),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              const SizedBox(height: 10),
-              const Text(
-                'Preencha seus dados: ',
-                style: TextStyle(
-                  fontSize: 16,
-                  fontWeight: FontWeight.bold,
-                  color: Colors.black,
-                ),
-              ),
-              const SizedBox(height: 15),
-              TextFormField(
-                controller: _emailController,
-                keyboardType: TextInputType.emailAddress,
-                decoration: const InputDecoration(
-                  labelText: 'Email',
-                  labelStyle: TextStyle(color: Colors.black),
-                  border: OutlineInputBorder(),
-                  enabledBorder: OutlineInputBorder(
-                    borderSide: BorderSide(color: Colors.black),
-                  ),
-                  focusedBorder: OutlineInputBorder(
-                    borderSide: BorderSide(color: Colors.black, width: 2.0),
-                  ),
-                ),
-                style: const TextStyle(color: Colors.black),
-              ),
-              const SizedBox(height: 20),
-              TextFormField(
-                controller: _nameController,
-                decoration: const InputDecoration(
-                  labelText: 'Nome',
-                  labelStyle: TextStyle(color: Colors.black),
-                  border: OutlineInputBorder(),
-                  enabledBorder: OutlineInputBorder(
-                    borderSide: BorderSide(color: Colors.black),
-                  ),
-                  focusedBorder: OutlineInputBorder(
-                    borderSide: BorderSide(color: Colors.black, width: 2.0),
-                  ),
-                ),
-                style: const TextStyle(color: Colors.black),
-              ),
-              const SizedBox(height: 20),
-              TextFormField(
-                controller: _passwordController,
-                obscureText: _obscurePassword,
-                decoration: InputDecoration(
-                  labelText: 'Senha',
-                  labelStyle: const TextStyle(color: Colors.black),
-                  border: const OutlineInputBorder(),
-                  enabledBorder: const OutlineInputBorder(
-                    borderSide: BorderSide(color: Colors.black),
-                  ),
-                  focusedBorder: const OutlineInputBorder(
-                    borderSide: BorderSide(color: Colors.black, width: 2.0),
-                  ),
-                  suffixIcon: IconButton(
-                    icon: Icon(
-                      _obscurePassword
-                          ? Icons.visibility_off
-                          : Icons.visibility,
+      body: _isLoading
+          ? const Center(child: CircularProgressIndicator())
+          : SingleChildScrollView(
+              child: Padding(
+                padding: const EdgeInsets.all(16.0),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    const SizedBox(height: 10),
+                    const Text(
+                      'Preencha seus dados: ',
+                      style: TextStyle(
+                        fontSize: 16,
+                        fontWeight: FontWeight.bold,
+                        color: Colors.black,
+                      ),
                     ),
-                    onPressed: () {
-                      setState(() {
-                        _obscurePassword = !_obscurePassword;
-                      });
-                    },
-                  ),
-                ),
-                style: const TextStyle(color: Colors.black),
-              ),
-              const SizedBox(height: 20),
-              TextFormField(
-                controller: _passwordRepeatedController,
-                obscureText: _obscurePasswordRepeated,
-                decoration: InputDecoration(
-                  labelText: 'Confirme a senha',
-                  labelStyle: const TextStyle(color: Colors.black),
-                  border: const OutlineInputBorder(),
-                  enabledBorder: const OutlineInputBorder(
-                    borderSide: BorderSide(color: Colors.black),
-                  ),
-                  focusedBorder: const OutlineInputBorder(
-                    borderSide: BorderSide(color: Colors.black, width: 2.0),
-                  ),
-                  suffixIcon: IconButton(
-                    icon: Icon(
-                      _obscurePasswordRepeated
-                          ? Icons.visibility_off
-                          : Icons.visibility,
-                    ),
-                    onPressed: () {
-                      setState(() {
-                        _obscurePasswordRepeated = !_obscurePasswordRepeated;
-                      });
-                    },
-                  ),
-                ),
-                style: const TextStyle(color: Colors.black),
-              ),
-              const SizedBox(height: 25),
-              const Text(
-                'Quero usar o aplicativo como: ',
-                style: TextStyle(
-                  fontSize: 16,
-                  fontWeight: FontWeight.bold,
-                  color: Colors.black,
-                ),
-              ),
-              Row(
-                children: [
-                  Expanded(
-                    child: Row(
-                      children: [
-                        Radio(
-                          value: true,
-                          groupValue: _isAlunoSelected,
-                          onChanged: _handleAlunoSelected,
-                          activeColor: Colors.red,
+                    const SizedBox(height: 15),
+                    TextFormField(
+                      controller: _emailController,
+                      keyboardType: TextInputType.emailAddress,
+                      decoration: const InputDecoration(
+                        labelText: 'Email',
+                        labelStyle: TextStyle(color: Colors.black),
+                        border: OutlineInputBorder(),
+                        enabledBorder: OutlineInputBorder(
+                          borderSide: BorderSide(color: Colors.black),
                         ),
-                        const Text(
-                          'Aluno',
-                          style: TextStyle(color: Colors.black),
+                        focusedBorder: OutlineInputBorder(
+                          borderSide:
+                              BorderSide(color: Colors.black, width: 2.0),
+                        ),
+                      ),
+                      style: const TextStyle(color: Colors.black),
+                    ),
+                    const SizedBox(height: 20),
+                    TextFormField(
+                      controller: _nameController,
+                      decoration: const InputDecoration(
+                        labelText: 'Nome',
+                        labelStyle: TextStyle(color: Colors.black),
+                        border: OutlineInputBorder(),
+                        enabledBorder: OutlineInputBorder(
+                          borderSide: BorderSide(color: Colors.black),
+                        ),
+                        focusedBorder: OutlineInputBorder(
+                          borderSide:
+                              BorderSide(color: Colors.black, width: 2.0),
+                        ),
+                      ),
+                      style: const TextStyle(color: Colors.black),
+                    ),
+                    const SizedBox(height: 20),
+                    TextFormField(
+                      controller: _passwordController,
+                      obscureText: _obscurePassword,
+                      decoration: InputDecoration(
+                        labelText: 'Senha',
+                        labelStyle: const TextStyle(color: Colors.black),
+                        border: const OutlineInputBorder(),
+                        enabledBorder: const OutlineInputBorder(
+                          borderSide: BorderSide(color: Colors.black),
+                        ),
+                        focusedBorder: const OutlineInputBorder(
+                          borderSide:
+                              BorderSide(color: Colors.black, width: 2.0),
+                        ),
+                        suffixIcon: IconButton(
+                          icon: Icon(
+                            _obscurePassword
+                                ? Icons.visibility_off
+                                : Icons.visibility,
+                          ),
+                          onPressed: () {
+                            setState(() {
+                              _obscurePassword = !_obscurePassword;
+                            });
+                          },
+                        ),
+                      ),
+                      style: const TextStyle(color: Colors.black),
+                    ),
+                    const SizedBox(height: 20),
+                    TextFormField(
+                      controller: _passwordRepeatedController,
+                      obscureText: _obscurePasswordRepeated,
+                      decoration: InputDecoration(
+                        labelText: 'Confirme a senha',
+                        labelStyle: const TextStyle(color: Colors.black),
+                        border: const OutlineInputBorder(),
+                        enabledBorder: const OutlineInputBorder(
+                          borderSide: BorderSide(color: Colors.black),
+                        ),
+                        focusedBorder: const OutlineInputBorder(
+                          borderSide:
+                              BorderSide(color: Colors.black, width: 2.0),
+                        ),
+                        suffixIcon: IconButton(
+                          icon: Icon(
+                            _obscurePasswordRepeated
+                                ? Icons.visibility_off
+                                : Icons.visibility,
+                          ),
+                          onPressed: () {
+                            setState(() {
+                              _obscurePasswordRepeated =
+                                  !_obscurePasswordRepeated;
+                            });
+                          },
+                        ),
+                      ),
+                      style: const TextStyle(color: Colors.black),
+                    ),
+                    const SizedBox(height: 25),
+                    const Text(
+                      'Quero usar o aplicativo como: ',
+                      style: TextStyle(
+                        fontSize: 16,
+                        fontWeight: FontWeight.bold,
+                        color: Colors.black,
+                      ),
+                    ),
+                    Row(
+                      children: [
+                        Expanded(
+                          child: Row(
+                            children: [
+                              Radio(
+                                value: true,
+                                groupValue: _isAlunoSelected,
+                                onChanged: _handleAlunoSelected,
+                                activeColor: Colors.red,
+                              ),
+                              const Text(
+                                'Aluno',
+                                style: TextStyle(color: Colors.black),
+                              ),
+                            ],
+                          ),
+                        ),
+                        Expanded(
+                          child: Row(
+                            children: [
+                              Radio(
+                                value: true,
+                                groupValue: _isProfessorSelected,
+                                onChanged: _handleProfessorSelected,
+                                activeColor: Colors.red,
+                              ),
+                              const Text(
+                                'Professor',
+                                style: TextStyle(color: Colors.black),
+                              ),
+                            ],
+                          ),
                         ),
                       ],
                     ),
-                  ),
-                  Expanded(
-                    child: Row(
-                      children: [
-                        Radio(
-                          value: true,
-                          groupValue: _isProfessorSelected,
-                          onChanged: _handleProfessorSelected,
-                          activeColor: Colors.red,
+                    const SizedBox(height: 10),
+                    SizedBox(
+                      // width: 2 * (MediaQuery.of(context).size.width) / 3,
+                      width: double.infinity,
+                      child: ElevatedButton(
+                        onPressed: _handleFormSubmit,
+                        style: ElevatedButton.styleFrom(
+                          backgroundColor: Colors.red,
                         ),
-                        const Text(
-                          'Professor',
-                          style: TextStyle(color: Colors.black),
+                        child: const Text(
+                          'Concluir',
+                          style: TextStyle(
+                            color: Colors.black,
+                          ),
                         ),
-                      ],
+                      ),
                     ),
-                  ),
-                ],
-              ),
-              const SizedBox(height: 10),
-              SizedBox(
-                // width: 2 * (MediaQuery.of(context).size.width) / 3,
-                width: double.infinity,
-                child: ElevatedButton(
-                  onPressed: _handleFormSubmit,
-                  style: ElevatedButton.styleFrom(
-                    backgroundColor: Colors.red,
-                  ),
-                  child: const Text(
-                    'Concluir',
-                    style: TextStyle(
-                      color: Colors.black,
-                    ),
-                  ),
+                  ],
                 ),
               ),
-            ],
-          ),
-        ),
-      ),
+            ),
     );
   }
 }
