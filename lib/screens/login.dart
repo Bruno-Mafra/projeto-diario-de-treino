@@ -28,8 +28,10 @@ class _LoginScreenState extends State<LoginScreen> {
     interface
         .checarUsuario(_emailController.text, _passwordController.text)
         .then((autenticado) {
-      if (autenticado) {
+      if (autenticado == 0) {
         Navigator.of(context, rootNavigator: true).pushNamed('/student_home');
+      } else if (autenticado == 1) {
+        Navigator.of(context, rootNavigator: true).pushNamed('/professor_home');
       } else {
         Fluttertoast.showToast(
             msg: "Usuário ou senha inválidos.",
