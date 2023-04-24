@@ -1,4 +1,3 @@
-import 'dart:ffi';
 import 'mongodb.dart';
 import 'sqldb.dart';
 import "package:projeto_diario_de_treino/entities/treino.dart";
@@ -60,6 +59,7 @@ class DbInterface {
       for(List<dynamic> r in resultsAlunos){
         Map<String, dynamic> alunoInfo = await _alunoJson(r[1]);
         Aluno alunoObj = Aluno.fromJson(alunoInfo);
+        alunoObj = await recuperarInfoAluno(alunoObj.email);
         listaAlunos.add(alunoObj);
       }
 

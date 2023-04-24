@@ -70,95 +70,102 @@ class _LoginScreenState extends State<LoginScreen> {
       ),
       body: _isLoading
           ? const Center(child: CircularProgressIndicator())
-          : Padding(
-              padding: const EdgeInsets.all(20.0),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.stretch,
-                children: [
-                  TextField(
-                    controller: _emailController,
-                    keyboardType: TextInputType.emailAddress,
-                    decoration: const InputDecoration(
-                      labelText: 'Email',
-                      enabledBorder: UnderlineInputBorder(
-                        borderSide: BorderSide(color: Colors.grey),
-                      ),
-                      focusedBorder: UnderlineInputBorder(
-                        borderSide: BorderSide(color: Colors.grey, width: 2.0),
-                      ),
-                      labelStyle: TextStyle(color: Colors.black),
-                      border: InputBorder.none,
-                    ),
-                  ),
-                  const SizedBox(height: 16.0),
-                  TextField(
-                    controller: _passwordController,
-                    obscureText: _obscurePassword,
-                    decoration: InputDecoration(
-                      labelText: 'Senha',
-                      enabledBorder: const UnderlineInputBorder(
-                        borderSide: BorderSide(color: Colors.grey),
-                      ),
-                      focusedBorder: const UnderlineInputBorder(
-                        borderSide: BorderSide(color: Colors.grey, width: 2.0),
-                      ),
-                      labelStyle: const TextStyle(color: Colors.black),
-                      border: InputBorder.none,
-                      suffixIcon: IconButton(
-                        icon: Icon(
-                          _obscurePassword
-                              ? Icons.visibility_off
-                              : Icons.visibility,
+          : SingleChildScrollView(
+              child: Padding(
+                padding: const EdgeInsets.all(20.0),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.stretch,
+                  children: [
+                    Image.asset('assets/main_icon_2.png',
+                        height: 175, width: 175),
+                    TextField(
+                      controller: _emailController,
+                      keyboardType: TextInputType.emailAddress,
+                      decoration: const InputDecoration(
+                        labelText: 'Email',
+                        enabledBorder: UnderlineInputBorder(
+                          borderSide: BorderSide(color: Colors.grey),
                         ),
-                        onPressed: () {
-                          setState(() {
-                            _obscurePassword = !_obscurePassword;
-                          });
-                        },
+                        focusedBorder: UnderlineInputBorder(
+                          borderSide:
+                              BorderSide(color: Colors.grey, width: 2.0),
+                        ),
+                        labelStyle: TextStyle(color: Colors.black),
+                        border: InputBorder.none,
                       ),
                     ),
-                  ),
-                  const SizedBox(height: 16.0),
-                  ElevatedButton(
-                    style: ButtonStyle(
-                      backgroundColor: MaterialStateProperty.resolveWith<Color>(
-                        (Set<MaterialState> states) {
-                          return states.contains(MaterialState.pressed)
-                              ? Colors.red[600]!
-                              : Colors.red;
-                        },
+                    const SizedBox(height: 16.0),
+                    TextField(
+                      controller: _passwordController,
+                      obscureText: _obscurePassword,
+                      decoration: InputDecoration(
+                        labelText: 'Senha',
+                        enabledBorder: const UnderlineInputBorder(
+                          borderSide: BorderSide(color: Colors.grey),
+                        ),
+                        focusedBorder: const UnderlineInputBorder(
+                          borderSide:
+                              BorderSide(color: Colors.grey, width: 2.0),
+                        ),
+                        labelStyle: const TextStyle(color: Colors.black),
+                        border: InputBorder.none,
+                        suffixIcon: IconButton(
+                          icon: Icon(
+                            _obscurePassword
+                                ? Icons.visibility_off
+                                : Icons.visibility,
+                          ),
+                          onPressed: () {
+                            setState(() {
+                              _obscurePassword = !_obscurePassword;
+                            });
+                          },
+                        ),
                       ),
                     ),
-                    onPressed: _validateLogin,
-                    child: const Text(
-                      'Entrar',
-                      style: TextStyle(
-                        color: Colors.black,
+                    const SizedBox(height: 16.0),
+                    ElevatedButton(
+                      style: ButtonStyle(
+                        backgroundColor:
+                            MaterialStateProperty.resolveWith<Color>(
+                          (Set<MaterialState> states) {
+                            return states.contains(MaterialState.pressed)
+                                ? Colors.red[600]!
+                                : Colors.red;
+                          },
+                        ),
+                      ),
+                      onPressed: _validateLogin,
+                      child: const Text(
+                        'Entrar',
+                        style: TextStyle(
+                          color: Colors.black,
+                        ),
                       ),
                     ),
-                  ),
-                  const SizedBox(height: 32.0),
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: <Widget>[
-                      const Text(
-                        'Ainda não é usuário? ',
-                      ),
-                      GestureDetector(
-                        onTap: () {
-                          Navigator.of(context, rootNavigator: true)
-                              .pushNamed('/register');
-                        },
-                        child: const Text(
-                          'Fazer cadastro',
-                          style: TextStyle(
-                            color: Colors.red,
+                    const SizedBox(height: 32.0),
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: <Widget>[
+                        const Text(
+                          'Ainda não é usuário? ',
+                        ),
+                        GestureDetector(
+                          onTap: () {
+                            Navigator.of(context, rootNavigator: true)
+                                .pushNamed('/register');
+                          },
+                          child: const Text(
+                            'Fazer cadastro',
+                            style: TextStyle(
+                              color: Colors.red,
+                            ),
                           ),
                         ),
-                      ),
-                    ],
-                  ),
-                ],
+                      ],
+                    ),
+                  ],
+                ),
               ),
             ),
     );
