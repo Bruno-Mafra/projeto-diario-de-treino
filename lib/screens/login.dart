@@ -29,9 +29,19 @@ class _LoginScreenState extends State<LoginScreen> {
         .checarUsuario(_emailController.text, _passwordController.text)
         .then((autenticado) {
       if (autenticado == 0) {
-        Navigator.of(context, rootNavigator: true).pushNamed('/student_home');
+        interface.recuperarInfoAluno(_emailController.text).then((aluno) => {
+              Navigator.of(context, rootNavigator: true).pushNamed(
+                  '/student_home',
+                  arguments: {'aluno': aluno, 'isProfessorAccessing': false})
+            });
       } else if (autenticado == 1) {
-        Navigator.of(context, rootNavigator: true).pushNamed('/professor_home');
+        interface
+            .recuperarInfoProfessor(_emailController.text)
+            .then((professor) => {
+                  Navigator.of(context, rootNavigator: true).pushNamed(
+                      '/professor_home',
+                      arguments: {'professor': professor})
+                });
       } else {
         Fluttertoast.showToast(
             msg: "Usuário ou senha inválidos.",
