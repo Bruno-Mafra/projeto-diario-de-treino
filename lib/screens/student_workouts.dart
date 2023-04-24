@@ -1,9 +1,14 @@
 import 'package:flutter/material.dart';
 import '../components/header.dart';
 import '../components/exercise.dart';
+import '../entities/aluno.dart';
 
 class StudentWorkoutsScreen extends StatefulWidget {
-  const StudentWorkoutsScreen({super.key});
+  const StudentWorkoutsScreen(
+      {super.key, required this.aluno, required this.isProfessorAccessing});
+
+  final Aluno aluno;
+  final bool isProfessorAccessing;
 
   @override
   _StudentWorkoutsScreenState createState() => _StudentWorkoutsScreenState();
@@ -16,7 +21,11 @@ class _StudentWorkoutsScreenState extends State<StudentWorkoutsScreen> {
       body: SingleChildScrollView(
         child: Column(
           children: [
-            const Header(title: 'Olá, Fulano!', showBackButton: false),
+            Header(
+                title: widget.isProfessorAccessing
+                    ? 'Treinos do(a): ${widget.aluno.nome.split(" ")[0]}!'
+                    : 'Olá, ${widget.aluno.nome.split(" ")[0]}!',
+                showBackButton: widget.isProfessorAccessing),
             const SizedBox(height: 8.0),
             const Padding(
               padding: EdgeInsets.all(8.0),
@@ -51,7 +60,7 @@ class _StudentWorkoutsScreenState extends State<StudentWorkoutsScreen> {
                     scrollDirection: Axis.vertical,
                     shrinkWrap: true,
                     padding: EdgeInsets.zero,
-                    itemCount: 5,
+                    itemCount: widget.aluno.listaTreinos.length,
                     itemBuilder: (context, index) {
                       return Container(
                         color: index % 2 != 0
@@ -64,7 +73,7 @@ class _StudentWorkoutsScreenState extends State<StudentWorkoutsScreen> {
                           title: Row(
                             mainAxisAlignment: MainAxisAlignment.spaceBetween,
                             children: [
-                              Text('Treino ${index + 1}'),
+                              Text(widget.aluno.listaTreinos[index].nome),
                               IconButton(
                                 onPressed: () {
                                   // Levaria para as funcionalidades de calendário
@@ -74,9 +83,19 @@ class _StudentWorkoutsScreenState extends State<StudentWorkoutsScreen> {
                             ],
                           ),
                           children: [
-                            const Exercise(),
-                            const Exercise(),
-                            const Exercise(),
+                            Column(
+                              children: widget
+                                  .aluno.listaTreinos[index].listaExercicios
+                                  .map((exercicio) => Exercise(
+                                        exerciseName: exercicio.nome,
+                                        sets: exercicio.quantidadeSeries,
+                                        repetitions:
+                                            exercicio.quantidadeRepeticoes,
+                                        advancedTechnique:
+                                            exercicio.tecnicaAvancada,
+                                      ))
+                                  .toList(),
+                            ),
                             Container(
                               height: 45,
                               color: Colors.white,
@@ -87,7 +106,10 @@ class _StudentWorkoutsScreenState extends State<StudentWorkoutsScreen> {
                                 child: ElevatedButton(
                                   onPressed: () {
                                     Navigator.of(context, rootNavigator: true)
-                                        .pushNamed('/edit_workout');
+                                        .pushNamed('/edit_workout', arguments: {
+                                      'aluno': widget.aluno,
+                                      'workoutIndex': index
+                                    });
                                   },
                                   style: ElevatedButton.styleFrom(
                                     backgroundColor: Colors.red,
@@ -118,8 +140,9 @@ class _StudentWorkoutsScreenState extends State<StudentWorkoutsScreen> {
                     const EdgeInsets.symmetric(vertical: 10, horizontal: 100),
                 child: ElevatedButton(
                   onPressed: () {
-                    Navigator.of(context, rootNavigator: true)
-                        .pushNamed('/edit_workout');
+                    Navigator.of(context, rootNavigator: true).pushNamed(
+                        '/edit_workout',
+                        arguments: {'aluno': widget.aluno, 'workoutIndex': -1});
                   },
                   style: ElevatedButton.styleFrom(
                     backgroundColor: Colors.red,

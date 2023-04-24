@@ -79,48 +79,60 @@ class _RegisterScreenState extends State<RegisterScreen> {
             nome: _nameController.text,
             senha: _passwordController.text,
           );
-          String resultado = await novoAluno.cadastrar();
-          if (resultado == "sucesso") {
-            Navigator.of(context, rootNavigator: true)
-                .pushNamed('/student_home');
-          } else if (resultado == "email_cadastrado") {
-            print("Usuario existe.");
-            Fluttertoast.showToast(
-                msg: "O email inserido já está cadastrado.",
-                toastLength: Toast.LENGTH_SHORT,
-                gravity: ToastGravity.BOTTOM,
-                timeInSecForIosWeb: 1,
-                backgroundColor: Colors.redAccent[700],
-                textColor: Colors.white,
-                fontSize: 14.0);
-            setState(() {
-              _isLoading = false;
-            });
-          }
+          novoAluno.cadastrar().then((resultado) => {
+                if (resultado == "sucesso")
+                  {
+                    Navigator.of(context, rootNavigator: true)
+                        .pushNamed('/student_home', arguments: {
+                      'aluno': novoAluno,
+                      'isProfessorAccessing': false
+                    })
+                  }
+                else if (resultado == "email_cadastrado")
+                  {
+                    print("Usuario existe."),
+                    Fluttertoast.showToast(
+                        msg: "O email inserido já está cadastrado.",
+                        toastLength: Toast.LENGTH_SHORT,
+                        gravity: ToastGravity.BOTTOM,
+                        timeInSecForIosWeb: 1,
+                        backgroundColor: Colors.redAccent[700],
+                        textColor: Colors.white,
+                        fontSize: 14.0),
+                    setState(() {
+                      _isLoading = false;
+                    }),
+                  }
+              });
         } else {
           Professor novoProfessor = Professor(
               email: _emailController.text,
               nome: _nameController.text,
               senha: _passwordController.text,
               cref: generateRandomString(16));
-          String resultado = await novoProfessor.cadastrar();
-          if (resultado == "sucesso") {
-            Navigator.of(context, rootNavigator: true)
-                .pushNamed('/professor_home');
-          } else if (resultado == "email_cadastrado") {
-            print("Usuario existe.");
-            Fluttertoast.showToast(
-                msg: "O email inserido já está cadastrado.",
-                toastLength: Toast.LENGTH_SHORT,
-                gravity: ToastGravity.BOTTOM,
-                timeInSecForIosWeb: 1,
-                backgroundColor: Colors.redAccent[700],
-                textColor: Colors.white,
-                fontSize: 14.0);
-            setState(() {
-              _isLoading = false;
-            });
-          }
+          novoProfessor.cadastrar().then((resultado) => {
+                if (resultado == "sucesso")
+                  {
+                    Navigator.of(context, rootNavigator: true).pushNamed(
+                        '/professor_home',
+                        arguments: {'professor': novoProfessor}),
+                  }
+                else if (resultado == "email_cadastrado")
+                  {
+                    print("Usuario existe."),
+                    Fluttertoast.showToast(
+                        msg: "O email inserido já está cadastrado.",
+                        toastLength: Toast.LENGTH_SHORT,
+                        gravity: ToastGravity.BOTTOM,
+                        timeInSecForIosWeb: 1,
+                        backgroundColor: Colors.redAccent[700],
+                        textColor: Colors.white,
+                        fontSize: 14.0),
+                    setState(() {
+                      _isLoading = false;
+                    }),
+                  }
+              });
         }
       } catch (error) {
         setState(() {

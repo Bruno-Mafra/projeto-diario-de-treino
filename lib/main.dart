@@ -10,26 +10,10 @@ import 'screens/login.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'firebase_options.dart';
 
-import "package:projeto_diario_de_treino/database/db_interface.dart";
-import 'package:projeto_diario_de_treino/entities/aluno.dart';
-import "package:projeto_diario_de_treino/entities/professor.dart";
+import '../entities/aluno.dart';
+import "../entities/professor.dart";
 
 Future<void> main() async {
-  DbInterface interface = DbInterface();
-  await interface.connect();
-
-  Professor novoProfessor = await interface.recuperarInfoProfessor("professor_a@gmail.com");
-  print("FUNCIONOU 1!");
-  print(novoProfessor.nome);
-  print(novoProfessor.alunosVinculados);
-  print(novoProfessor.alunosVinculados[0].nome);
-  
-  Aluno novoAluno = await interface.recuperarInfoAluno("whatever@gmail.com");
-  print("FUNCIONOU 2!");
-  print(novoAluno.nome);
-  print(novoAluno.listaTreinos.toString());
-  print(novoAluno.listaTreinos[0].nome);
-
   WidgetsFlutterBinding.ensureInitialized();
   try {
     await Firebase.initializeApp(
@@ -53,13 +37,40 @@ class MyApp extends StatelessWidget {
         useMaterial3: true,
       ),
       initialRoute: "/login",
+      onGenerateRoute: (settings) {
+        // Define as rotas que dependem de parâmetros aqui
+        if (settings.name == "/student_home") {
+          final args = settings.arguments as Map<String, dynamic>;
+          final aluno = args["aluno"] as Aluno;
+          final isProfessorAccessing = args["isProfessorAccessing"] as bool;
+          return MaterialPageRoute(
+            builder: (context) => StudentWorkoutsScreen(
+              aluno: aluno,
+              isProfessorAccessing: isProfessorAccessing,
+            ),
+          );
+        } else if (settings.name == "/edit_workout") {
+          final args = settings.arguments as Map<String, dynamic>;
+          final aluno = args["aluno"] as Aluno;
+          final index = args["workoutIndex"] as int;
+          return MaterialPageRoute(
+            builder: (context) =>
+                EditWorkoutScreen(aluno: aluno, workoutIndex: index),
+          );
+        } else if (settings.name == "/professor_home") {
+          final args = settings.arguments as Map<String, dynamic>;
+          final professor = args["professor"] as Professor;
+          return MaterialPageRoute(
+            builder: (context) => ProfessorHomeScreen(professor: professor),
+          );
+        }
+        // Caso contrário, use as rotas definidas no `routes`
+        return null;
+      },
       routes: {
         "/login": (context) => const LoginScreen(title: 'Diário de Treino'),
         "/register": (context) => const RegisterScreen(),
-        "/student_home": (context) => const StudentWorkoutsScreen(),
-        "/professor_home": (context) => const ProfessorHomeScreen(),
         "/search_student": (context) => const SearchStudentScreen(),
-        "/edit_workout": (context) => const EditWorkoutScreen(),
       },
     );
   }

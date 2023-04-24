@@ -5,13 +5,11 @@ class ExerciseEdit extends StatefulWidget {
     super.key,
     this.sets = 3,
     this.repetitions = 15,
-    this.exerciseName = 'Exercício X',
     this.advancedTechnique = 'Padrão',
   });
 
   int sets;
   int repetitions;
-  String exerciseName;
   String advancedTechnique;
 
   @override

@@ -3,10 +3,14 @@ import 'package:fluttertoast/fluttertoast.dart';
 import '../components/exercises_modal.dart';
 import '../components/header.dart';
 import '../components/exercise_edit.dart';
-
+import '../entities/aluno.dart';
 
 class EditWorkoutScreen extends StatefulWidget {
-  const EditWorkoutScreen({super.key});
+  const EditWorkoutScreen(
+      {super.key, required this.aluno, required this.workoutIndex});
+
+  final Aluno aluno;
+  final int workoutIndex;
 
   @override
   _EditWorkoutScreenState createState() => _EditWorkoutScreenState();
@@ -32,11 +36,13 @@ class _EditWorkoutScreenState extends State<EditWorkoutScreen> {
           children: [
             const Header(title: 'Diário de Treino', showBackButton: true),
             const SizedBox(height: 8.0),
-            const Padding(
-              padding: EdgeInsets.all(8.0),
+            Padding(
+              padding: const EdgeInsets.all(8.0),
               child: Text(
-                'Editar treino',
-                style: TextStyle(
+                widget.workoutIndex == -1
+                    ? 'Adicionar treino'
+                    : 'Editar treino',
+                style: const TextStyle(
                   fontSize: 20,
                   fontWeight: FontWeight.bold,
                 ),
@@ -65,7 +71,10 @@ class _EditWorkoutScreenState extends State<EditWorkoutScreen> {
                     scrollDirection: Axis.vertical,
                     shrinkWrap: true,
                     padding: EdgeInsets.zero,
-                    itemCount: 5,
+                    itemCount: widget.workoutIndex != -1
+                        ? widget.aluno.listaTreinos[widget.workoutIndex]
+                            .listaExercicios.length
+                        : 0,
                     itemBuilder: (context, index) {
                       return Container(
                         color: index % 2 != 0
@@ -75,9 +84,28 @@ class _EditWorkoutScreenState extends State<EditWorkoutScreen> {
                           iconColor: Colors.black,
                           leading: const Icon(Icons.fitness_center_outlined),
                           backgroundColor: Colors.red[400],
-                          title: Text('Exercício ${index + 1}'),
+                          title: Text(widget
+                              .aluno
+                              .listaTreinos[widget.workoutIndex]
+                              .listaExercicios[index]
+                              .nome),
                           children: [
-                            ExerciseEdit(),
+                            ExerciseEdit(
+                                sets: widget
+                                    .aluno
+                                    .listaTreinos[widget.workoutIndex]
+                                    .listaExercicios[index]
+                                    .quantidadeSeries,
+                                repetitions: widget
+                                    .aluno
+                                    .listaTreinos[widget.workoutIndex]
+                                    .listaExercicios[index]
+                                    .quantidadeRepeticoes,
+                                advancedTechnique: widget
+                                    .aluno
+                                    .listaTreinos[widget.workoutIndex]
+                                    .listaExercicios[index]
+                                    .tecnicaAvancada),
                             Row(children: [
                               Expanded(
                                 child: Container(
@@ -214,7 +242,10 @@ class _EditWorkoutScreenState extends State<EditWorkoutScreen> {
                             onPressed: () {
                               showToast();
                               Navigator.of(context, rootNavigator: true)
-                                  .pushNamed('/student_home');
+                                  .pushNamed('/student_home', arguments: {
+                                'aluno': widget.aluno,
+                                'isProfessorAccessing': false
+                              });
                             },
                             style: ElevatedButton.styleFrom(
                               backgroundColor: Colors.red,
