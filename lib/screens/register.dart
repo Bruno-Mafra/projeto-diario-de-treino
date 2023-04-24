@@ -1,11 +1,6 @@
-// ignore_for_file: unused_import, library_private_types_in_public_api
-import 'dart:ffi';
-
 import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
-import 'package:projeto_diario_de_treino/database/db_interface.dart';
 import 'package:projeto_diario_de_treino/utils/tools.dart';
-import 'package:projeto_diario_de_treino/entities/usuario.dart';
 import "package:projeto_diario_de_treino/entities/aluno.dart";
 import "package:projeto_diario_de_treino/entities/professor.dart";
 
